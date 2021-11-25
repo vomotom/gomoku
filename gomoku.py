@@ -1,4 +1,5 @@
 import os, string
+columns = string.ascii_uppercase[:15]
 
 def clearConsole():
     command = 'clear'
@@ -14,7 +15,7 @@ def draw_board(board):
     clearConsole()
     board_string = "  "
     horizontal_line = "   " + 15 * " ---"
-    for letter in string.ascii_uppercase[:15]:
+    for letter in columns:
         board_string += "   " + letter
     board_string += "\n" + horizontal_line + "\n"
     square_counter = 0
@@ -30,11 +31,71 @@ def draw_board(board):
     print(board_string)
 
 def coords_to_index(coords):
-    pass
+    column = coords[0].upper()
+    row = int(coords[1:]) - 1
+    for count, letter in enumerate(columns):
+        if column == letter:
+            column = count
+            break
+    index = row * 15 + column
+    print("index: ", index)
+    return index
+
+def check_state(board):
+    # winning positions
+    winning_positions = []
+    # rows    
+
+    """
+    for row in range(15):
+        for square in range(11):
+            position = []
+            for i in range(5):
+                position.append(row*15+square+i)
+            winning_positions.append(position)
+
+
+    # columns
+    for column in range(15):
+        for square in range(11):
+            position = []
+            for i in range(5):
+                position.append(column+square*15+i*15)
+            winning_positions.append(position)
+    """
+
+    # top left diagonal
+    for row in range(11):
+        for square in range(11):
+            position = []
+            for i in range(5):
+                position.append(row*15+square+i*15)
+            winning_positions.append(position)
+
+    
+    return winning_positions
+
+
+
 
 def player_turn(board):
     pass
 
 
 board = board_init()
-draw_board(board)
+winning_positions = check_state(board)
+
+for position in winning_positions:
+    board = board_init()
+    for square in position:
+        board[square] = "x"
+    draw_board(board)
+    input()
+
+"""
+board = board_init()
+while True:
+    draw_board(board)
+    player_move = input("Kam chces hrat? ")
+    board[coords_to_index(player_move)] = "X"
+"""
