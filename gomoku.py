@@ -41,12 +41,10 @@ def coords_to_index(coords):
     print("index: ", index)
     return index
 
-def check_state(board):
-    # winning positions
+def get_winning_positions():
     winning_positions = []
-    # rows    
 
-    """
+    # rows    
     for row in range(15):
         for square in range(11):
             position = []
@@ -62,18 +60,36 @@ def check_state(board):
             for i in range(5):
                 position.append(column+square*15+i*15)
             winning_positions.append(position)
-    """
 
     # top left diagonal
     for row in range(11):
         for square in range(11):
             position = []
             for i in range(5):
-                position.append(row*15+square+i*15)
+                position.append(row*15+square+i*16)
             winning_positions.append(position)
 
+    # bottom right diagonal
+    for row in range(4,15):
+        for square in range(11):
+            position = []
+            for i in range(5):
+                position.append(row*15+square-i*14)
+            winning_positions.append(position)
+    
     
     return winning_positions
+
+def check_state(board):
+    winning_positions = get_winning_positions()
+    for player in ["X", "Y"]:
+        for position in winning_positions:
+            if player == board[position[0]] == board[position[1]] == \
+                board[position[2]] == board[position[3]] == \
+                    board[position[4]]:
+
+                    return player
+    return False
 
 
 
@@ -82,20 +98,16 @@ def player_turn(board):
     pass
 
 
-board = board_init()
-winning_positions = check_state(board)
 
-for position in winning_positions:
-    board = board_init()
-    for square in position:
-        board[square] = "x"
-    draw_board(board)
-    input()
-
-"""
 board = board_init()
 while True:
     draw_board(board)
+    if check_state(board) == "X":
+        print("Hrac X vyhral!")
+        input()
+        break
+
     player_move = input("Kam chces hrat? ")
     board[coords_to_index(player_move)] = "X"
-"""
+
+
